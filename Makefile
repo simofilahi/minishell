@@ -1,4 +1,4 @@
-:NAME= minishell
+NAME= minishell
 SRCS= srcs/*.c
 CC= gcc
 CFLAGS= -Wall -Werror -Wextra
