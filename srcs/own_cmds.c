@@ -6,7 +6,7 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/04 18:55:56 by mfilahi           #+#    #+#             */
-/*   Updated: 2019/02/05 13:06:22 by mfilahi          ###   ########.fr       */
+/*   Updated: 2019/03/03 18:09:51 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	change_dir_3(char *path, t_env *head_ref)
 	{
 		path = ft_strjoin("cd: permission denied: ", path);
 		ft_putendl_fd(path, 1);
+		free(path);
 	}
 }
 
@@ -32,10 +33,13 @@ void	change_dir_2(char *path, t_env *head_ref, t_env *temp)
 {
 	char	buff[1024];
 	char	*tmp;
+	char	*str;
 
 	tmp = ft_strsub(path, 1, ft_strlen(path));
-	path = ft_strjoin(get_var("HOME=", temp), tmp);
+	str = get_var("HOME=", temp);
+	path = ft_strjoin(str, tmp);
 	free(tmp);
+	free(str);
 	if (access(path, F_OK) == 0)
 	{
 		chdir(path);
@@ -50,13 +54,14 @@ void	change_dir(char **path, t_env *first_node_head)
 {
 	t_env	*temp;
 	char	buff[1024];
-	char	*pwd;
+	char	*ptr;
 
 	temp = first_node_head;
 	if (path[1] == NULL)
 	{
-		pwd = ft_strdup(get_var("HOME=", temp));
-		chdir(get_var("HOME=", temp));
+		ptr = get_var("HOME=", temp);
+		chdir(ptr);
+		free(ptr);
 		swap(first_node_head, getcwd(buff, sizeof(buff)));
 	}
 	else if ((ft_strncmp(path[1], "~/", 2) == 0) ||
@@ -64,8 +69,9 @@ void	change_dir(char **path, t_env *first_node_head)
 		change_dir_2(path[1], first_node_head, temp);
 	else if (ft_strcmp("-", path[1]) == 0)
 	{
-		pwd = ft_strdup(get_var("OLDPWD=", temp));
-		chdir(get_var("OLDPWD=", temp));
+		ptr = get_var("OLDPWD=", temp);
+		chdir(ptr);
+		free(ptr);
 		swap(first_node_head, getcwd(buff, sizeof(buff)));
 	}
 	else if (access(path[1], F_OK) == 0)

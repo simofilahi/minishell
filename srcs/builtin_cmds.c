@@ -6,7 +6,7 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/04 18:50:38 by mfilahi           #+#    #+#             */
-/*   Updated: 2019/02/05 13:12:57 by mfilahi          ###   ########.fr       */
+/*   Updated: 2019/03/03 17:46:04 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,21 @@
 int		cmd_is_found(char **tab, char **ptrcmd, char *temp)
 {
 	int		i;
+	char	*tmp;
 
 	i = 0;
 	while (tab[i])
 	{
 		(*ptrcmd) = ft_strdup(temp);
+		tmp = (*ptrcmd);
 		(*ptrcmd) = ft_strjoin(tab[i], (*ptrcmd));
+		free(tmp);
 		if (access((*ptrcmd), F_OK) == 0)
+		{
+			free((*ptrcmd));
 			return (1);
+		}
+		free((*ptrcmd));
 		i++;
 	}
 	return (0);
@@ -33,6 +40,7 @@ void	which_cmd(char **command, t_env *first_node_ref)
 	char	*temp;
 	char	*cmd;
 	char	**tab;
+	char		*ptr;
 	int		j;
 
 	tab = get_path(first_node_ref);
@@ -40,14 +48,30 @@ void	which_cmd(char **command, t_env *first_node_ref)
 	while (command[j])
 	{
 		cmd = ft_strdup(command[j]);
+		ptr = cmd;
 		cmd = ft_strjoin(cmd, " not found");
+		free(ptr);
 		temp = ft_strjoin("/", command[j]);
 		if (cmd_is_found(tab, &command[j], temp))
+		{
+			free(cmd);
+			free(temp);
 			ft_putendl_fd(command[j], 1);
+		}
 		else
+		{
+			free(temp);
 			ft_putendl_fd(cmd, 2);
+			free(cmd);
+		}
+		free(temp);
+		free(cmd);
 		j++;
 	}
+	j = -1;
+	while (tab[++j])
+		free(tab[j]);
+	free(tab);
 }
 
 void	builtin_cmds_2(char **ptrcmd, int *j, t_env *head_ref)
@@ -65,10 +89,7 @@ void	builtin_cmds_2(char **ptrcmd, int *j, t_env *head_ref)
 	else if (*j == 6)
 		which_cmd(ptrcmd, head_ref);
 	else
-	{
-		free_list(head_ref);
 		exit(0);
-	}
 }
 
 void	builtin_cmds(char **ptrcmd, int *j, char *tmp, t_env *first_node_head)

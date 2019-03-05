@@ -6,7 +6,7 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/04 20:31:34 by mfilahi           #+#    #+#             */
-/*   Updated: 2019/02/05 12:27:39 by mfilahi          ###   ########.fr       */
+/*   Updated: 2019/03/03 17:56:21 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*get_var(char *deli, t_env *ptrnode)
 	while (ptrnode)
 	{
 		if (ft_strncmp(deli, ptrnode->var, ft_strlen(deli)) == 0)
-			return (ptrnode->var + ft_strlen(deli));
+			return (ft_strdup(ptrnode->var + ft_strlen(deli)));
 		ptrnode = ptrnode->next;
 	}
 	return (NULL);
@@ -49,15 +49,25 @@ void	swap(t_env *ptr_head, char *path)
 {
 	t_env	*temp;
 	char	*str1;
+	char	*tmp;
 
 	temp = ptr_head;
 	str1 = get_var("PWD=", temp);
 	while (ptr_head)
 	{
 		if (ft_strncmp("OLDPWD=", ptr_head->var, 7) == 0)
+		{
+			tmp = ptr_head->var;
 			ptr_head->var = ft_strjoin("OLDPWD=", str1);
+			free(tmp);
+			free(str1);
+		}
 		if (ft_strncmp("PWD=", ptr_head->var, 4) == 0)
+		{
+			tmp = ptr_head->var;
 			ptr_head->var = ft_strjoin("PWD=", path);
+			free(tmp);
+		}
 		ptr_head = ptr_head->next;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/04 18:59:55 by mfilahi           #+#    #+#             */
-/*   Updated: 2019/02/05 12:28:21 by mfilahi          ###   ########.fr       */
+/*   Updated: 2019/03/03 17:51:34 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	createnode(t_env **head_ref, char *var)
 
 	if (!(new_node = malloc(sizeof(t_env))))
 		return ;
-	new_node->var = var;
+	new_node->var = ft_strdup(var);
 	new_node->next = (*head_ref);
 	(*head_ref) = new_node;
 }
@@ -77,6 +77,7 @@ void	delete_node(t_env *head_ref, char *str)
 		if (temp == NULL)
 			return ;
 		prev->next = temp->next;
+		free(temp->var);
 		free(temp);
 	}
 }

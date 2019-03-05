@@ -6,7 +6,7 @@
 /*   By: mfilahi <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/04 20:27:06 by mfilahi           #+#    #+#             */
-/*   Updated: 2019/02/04 23:36:15 by mfilahi          ###   ########.fr       */
+/*   Updated: 2019/03/03 18:09:30 by mfilahi          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	free_list(t_env *first_node)
 	{
 		tmp = current;
 		current = current->next;
+		free(current->var);
 		free(current);
 	}
 }
