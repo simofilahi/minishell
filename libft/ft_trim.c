@@ -17,7 +17,7 @@ static int	len(char *str, char delim)
 	int	i;
 
 	i = 0;
-	while (str[i] != delim)
+	while (str[i] && str[i] != delim)
 		i++;
 	return (i);
 }
@@ -30,7 +30,7 @@ char		*ft_trim(char *str, char delim)
 	if (!(tmp = (char *)malloc(sizeof(char) * len(str, delim) + 1)))
 		return (NULL);
 	i = 0;
-	while (*str != delim)
+	while (*str && *str != delim)
 	{
 		tmp[i++] = *str++;
 	}
